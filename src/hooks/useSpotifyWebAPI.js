@@ -6,129 +6,116 @@ export default function useSpotifyWebAPI(props) {
   const { spotifyPlayer } = props;
 }
 
-/**
- * Send request to Spotify Web API to transfer playback to the current device.
- * @param {Object} spotifyPlayer -
- */
-const transferPlaybackToDevice = async (spotifyPlayer, autoplay = false) => {
-  const {
-    _options: { getOAuthToken, id },
-  } = spotifyPlayer;
-  await getOAuthToken((access_token) => {
-    // Transfer Spotify to current device
-    axios({
-      url: "/v1/me/player",
-      baseURL: "https://api.spotify.com/",
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
+class SpotifyWebAPI {
+  constructor(accessToken) {
+    this.baseURL = "https://api.spotify.com/v1/";
+    this.headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    // Define API endpoints
+    this.player = new PlayerEndpoint(this);
+  }
+
+  /**
+   * Method to handle all requests made to the Spotify Web API.
+   * @param {Object} config
+   */
+  request(config) {
+    return axios({
+      baseURL: this.baseURL,
+      headers: this.headers,
+      ...config,
+    });
+  }
+
+  /**
+   * Shortcut method for making GET requests to the API.
+   * @param {Object} config
+   */
+  get(config) {
+    return this.request({ method: "GET", ...config });
+  }
+
+  /**
+   * Shortcut method for making POST requests to the API.
+   * @param {Object} config
+   */
+  post(config) {
+    return this.request({ method: "POST", ...config });
+  }
+
+  /**
+   * Shortcut method for making PUT requests to the API.
+   * @param {Object} config
+   */
+  put(config) {
+    return this.request({ method: "PUT", ...config });
+  }
+}
+
+class PlayerEndpoint {
+  constructor(api) {
+    this.api = api;
+    this.url = "/me/player";
+  }
+
+  /**
+   * Method to transfer playback to the provided device.
+   * @param {String} deviceId
+   * @param {Boolean} autoplay
+   */
+  transferPlayback(deviceId, autoplay = false) {
+    const config = {
+      url: this.url,
       data: {
-        device_ids: [id],
+        device_ids: [deviceId],
         play: autoplay,
       },
-    });
-  });
-};
+    };
+    return this.api.put(config);
+  }
 
-/**
- * Send request to Spotify Web API to initiate playback on the current device.
- * @param {Object} spotifyPlayer
- * @param {String} spotifyUri
- */
-const initiatePlaybackOnDevice = async (spotifyPlayer, spotifyUri) => {
-  const {
-    _options: { getOAuthToken, id },
-  } = spotifyPlayer;
-  // Begin playback on current device
-  await getOAuthToken((access_token) => {
-    axios({
-      url: "/me/player/play",
-      baseURL: "https://api.spotify.com/v1/",
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
+  /**
+   * Method to start playback on the provided device.
+   * @param {String} deviceId
+   * @param {String} contextUri
+   */
+  startPlayback(deviceId, contextUri = null) {
+    const config = {
+      url: this.url + "/play",
       params: {
-        device_id: id,
+        device_id: deviceId,
       },
-      data: {
-        context_uri: spotifyUri,
-      },
-    });
-  });
-};
+    };
+    if (contextUri) {
+      config.data = {
+        context_uri: contextUri,
+      };
+    }
+    return this.api.put(config);
+  }
 
-/**
- * Send request to Spotify Web API to start playback.
- * @param {Object} spotifyPlayer
- * @param {String} spotifyUri
- */
-const startPlayback = async (spotifyPlayer, spotifyUri) => {
-  const {
-    _options: { getOAuthToken },
-  } = spotifyPlayer;
-  // Begin playback on current device
-  await getOAuthToken((access_token) => {
-    axios({
-      url: "/me/player/play",
-      baseURL: "https://api.spotify.com/v1/",
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-      data: {
-        context_uri: spotifyUri,
-      },
-    });
-  });
-};
-
-/**
- * Send request to Spotify Web API to resume playback.
- * @param {Object} spotifyPlayer
- */
-const resumePlaybackOnDevice = async (spotifyPlayer) => {
-  const {
-    _options: { getOAuthToken, id },
-  } = spotifyPlayer;
-  // Resume playback on current device
-  await getOAuthToken((access_token) => {
-    axios({
-      url: "/me/player/play",
-      baseURL: "https://api.spotify.com/v1/",
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
+  /**
+   * Method to pause playback on the provided device.
+   * @param {String} deviceId
+   */
+  pausePlayback(deviceId) {
+    const config = {
+      url: this.url + "/pause",
       params: {
-        device_id: id,
+        device_id: deviceId,
       },
-    });
-  });
-};
+    };
+    return this.api.put(config);
+  }
 
-const pausePlaybackOnDevice = async (spotifyPlayer) => {
-  const {
-    _options: { getOAuthToken, id },
-  } = spotifyPlayer;
-  // Pause playback on current device
-  await getOAuthToken((access_token) => {
-    axios({
-      url: "/me/player/pause",
-      baseURL: "https://api.spotify.com/v1/",
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-      params: {
-        device_id: id,
-      },
-    });
-  });
-};
+  /**
+   * Method to resume playback on the provided device.
+   * @param {String} deviceId
+   */
+  resumePlayback(deviceId) {
+    return this.startPlayback(deviceId);
+  }
+}
