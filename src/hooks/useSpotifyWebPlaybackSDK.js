@@ -23,7 +23,7 @@ export default function useSpotifyWebPlaybackSDK(accessToken, options) {
     // Connect player to Spotify
     spotifyPlayer.connect().then((success) => {
       if (success) {
-        console.log("Connected to Spotify Web Playback SDK!");
+        console.log("The Web Playback SDK successfully connected to Spotify!");
       }
     });
 

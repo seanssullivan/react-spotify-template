@@ -3,14 +3,14 @@
 import axios from "axios";
 
 export default function useSpotifyWebAPI(props) {
-  const { player } = props;
+  const { spotifyPlayer } = props;
 }
 
 /**
- * Transfer playback to the current device.
+ * Send request to Spotify Web API to transfer playback to the current device.
  * @param {Object} spotifyPlayer -
  */
-const transferPlaybackToDevice = async (spotifyPlayer) => {
+const transferPlaybackToDevice = async (spotifyPlayer, autoplay = false) => {
   const {
     _options: { getOAuthToken, id },
   } = spotifyPlayer;
@@ -26,14 +26,14 @@ const transferPlaybackToDevice = async (spotifyPlayer) => {
       },
       data: {
         device_ids: [id],
-        play: false,
+        play: autoplay,
       },
     });
   });
 };
 
 /**
- * Initiate playback on the current device.
+ * Send request to Spotify Web API to initiate playback on the current device.
  * @param {Object} spotifyPlayer
  * @param {String} spotifyUri
  */
@@ -43,15 +43,91 @@ const initiatePlaybackOnDevice = async (spotifyPlayer, spotifyUri) => {
   } = spotifyPlayer;
   // Begin playback on current device
   await getOAuthToken((access_token) => {
-    // TODO: Refactor fetch request into an axios request
-    fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
+    axios({
+      url: "/me/player/play",
+      baseURL: "https://api.spotify.com/v1/",
       method: "PUT",
-      body: JSON.stringify({
-        context_uri: spotifyUri,
-      }),
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${access_token}`,
+      },
+      params: {
+        device_id: id,
+      },
+      data: {
+        context_uri: spotifyUri,
+      },
+    });
+  });
+};
+
+/**
+ * Send request to Spotify Web API to start playback.
+ * @param {Object} spotifyPlayer
+ * @param {String} spotifyUri
+ */
+const startPlayback = async (spotifyPlayer, spotifyUri) => {
+  const {
+    _options: { getOAuthToken },
+  } = spotifyPlayer;
+  // Begin playback on current device
+  await getOAuthToken((access_token) => {
+    axios({
+      url: "/me/player/play",
+      baseURL: "https://api.spotify.com/v1/",
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+      data: {
+        context_uri: spotifyUri,
+      },
+    });
+  });
+};
+
+/**
+ * Send request to Spotify Web API to resume playback.
+ * @param {Object} spotifyPlayer
+ */
+const resumePlaybackOnDevice = async (spotifyPlayer) => {
+  const {
+    _options: { getOAuthToken, id },
+  } = spotifyPlayer;
+  // Resume playback on current device
+  await getOAuthToken((access_token) => {
+    axios({
+      url: "/me/player/play",
+      baseURL: "https://api.spotify.com/v1/",
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+      params: {
+        device_id: id,
+      },
+    });
+  });
+};
+
+const pausePlaybackOnDevice = async (spotifyPlayer) => {
+  const {
+    _options: { getOAuthToken, id },
+  } = spotifyPlayer;
+  // Pause playback on current device
+  await getOAuthToken((access_token) => {
+    axios({
+      url: "/me/player/pause",
+      baseURL: "https://api.spotify.com/v1/",
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+      params: {
+        device_id: id,
       },
     });
   });
