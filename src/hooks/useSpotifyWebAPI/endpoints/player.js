@@ -1,61 +1,6 @@
-// src/hooks/useWebAPI.js
+// src/hooks/useSpotifyWebAPI/endpoints/player.js
 
-import axios from "axios";
-
-export default function useSpotifyWebAPI(props) {
-  const { spotifyPlayer } = props;
-}
-
-class SpotifyWebAPI {
-  constructor(accessToken) {
-    this.baseURL = "https://api.spotify.com/v1/";
-    this.headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    };
-
-    // Define API endpoints
-    this.player = new PlayerEndpoint(this);
-  }
-
-  /**
-   * Method to handle all requests made to the Spotify Web API.
-   * @param {Object} config
-   */
-  request(config) {
-    return axios({
-      baseURL: this.baseURL,
-      headers: this.headers,
-      ...config,
-    });
-  }
-
-  /**
-   * Shortcut method for making GET requests to the API.
-   * @param {Object} config
-   */
-  get(config) {
-    return this.request({ method: "GET", ...config });
-  }
-
-  /**
-   * Shortcut method for making POST requests to the API.
-   * @param {Object} config
-   */
-  post(config) {
-    return this.request({ method: "POST", ...config });
-  }
-
-  /**
-   * Shortcut method for making PUT requests to the API.
-   * @param {Object} config
-   */
-  put(config) {
-    return this.request({ method: "PUT", ...config });
-  }
-}
-
-class PlayerEndpoint {
+export default class PlayerEndpoint {
   constructor(api) {
     this.api = api;
     this.url = "/me/player";
@@ -117,5 +62,33 @@ class PlayerEndpoint {
    */
   resumePlayback(deviceId) {
     return this.startPlayback(deviceId);
+  }
+
+  /**
+   * Method to skip playback to the next track on the provided device.
+   * @param {String} deviceId
+   */
+  nextTrack(deviceId) {
+    const config = {
+      url: this.url + "/next",
+      params: {
+        device_id: deviceId,
+      },
+    };
+    return this.api.post(config);
+  }
+
+  /**
+   * Method to skip playback to the previous track on the provided device.
+   * @param {String} deviceId
+   */
+  previousTrack(deviceId) {
+    const config = {
+      url: this.url + "/previous",
+      params: {
+        device_id: deviceId,
+      },
+    };
+    return this.api.post(config);
   }
 }
