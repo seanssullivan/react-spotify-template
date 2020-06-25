@@ -8,7 +8,7 @@ const CLIENT_NAME = "React Spotify Player";
 /**
  * Spotify's Web Playback SDK creates a connection between the app and a user's Spotify account.
  */
-export default function useWebPlaybackSDK(accessToken, options) {
+export default function useSpotifyWebPlaybackSDK(accessToken, options) {
   const [spotifyPlayer, setSpotifyPlayer] = useState(null);
 
   const onSpotifyWebPlaybackSDKReady = useCallback(() => {
@@ -16,7 +16,7 @@ export default function useWebPlaybackSDK(accessToken, options) {
     const spotifyPlayer = initializeSpotifyPlayer(accessToken, options);
 
     // Add listeners to Spotify Player
-    addListeners(spotifyPlayer);
+    attachListeners(spotifyPlayer);
 
     // Connect player to Spotify
     spotifyPlayer.connect().then((success) => {
@@ -50,7 +50,7 @@ const initializeSpotifyPlayer = function (accessToken, options) {
  * Add listeners to the Spotify Player.
  * @param {Object} player
  */
-const addListeners = (player) => {
+const attachListeners = (player) => {
   player.addListener("initialization_error", handleInitializationError);
   player.addListener("authentication_error", handleAuthenticationError);
   player.addListener("account_error", handleAccountError);
