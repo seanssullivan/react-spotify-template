@@ -7,6 +7,8 @@ const CLIENT_NAME = "React Spotify Player";
 
 /**
  * Spotify's Web Playback SDK creates a connection between the app and a user's Spotify account.
+ * @param {String} accessToken - A valid Spotify access token
+ * @param {Object} options
  */
 export default function useSpotifyWebPlaybackSDK(accessToken, options) {
   const [spotifyPlayer, setSpotifyPlayer] = useState(null);
