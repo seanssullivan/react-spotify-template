@@ -13,11 +13,32 @@ export default class LibraryEndpoint {
   }
 
   /**
+   * Return list of saved albums.
+   */
+  get albums() {
+    return this.getSavedAlbums();
+  }
+
+  /**
+   * Return list of saved shows.
+   */
+  get shows() {
+    return this.getSavedShows();
+  }
+
+  /**
+   * Return list of saved tracks.
+   */
+  get tracks() {
+    return this.getSavedTracks();
+  }
+
+  /**
    * Method to handle all GET requests to retrieve items from the library endpoint.
    * @param {String} itemType
    * @param {Object} options
    */
-  _getSavedItems(itemType, options) {
+  _getSavedItems(itemType, options = {}) {
     if (!this._validItems.includes(itemType)) {
       throw Error(`${itemType} is not a valid item type`);
     }
@@ -37,7 +58,7 @@ export default class LibraryEndpoint {
    * - `offset`: The index of the first object to return. Default: 0.
    * - `market`: An ISO 3166-1 alpha-2 country code or the string `from_token`. (Applies track relinking.)
    */
-  getSavedAlbums(options) {
+  getSavedAlbums(options = {}) {
     return this._getSavedItems("albums", options);
   }
 
@@ -47,7 +68,7 @@ export default class LibraryEndpoint {
    * - `limit`: Maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.
    * - `offset`: The index of the first object to return. Default: 0.
    */
-  getSavedShows(options) {
+  getSavedShows(options = {}) {
     return this._getSavedItems("shows", options);
   }
 
@@ -58,7 +79,7 @@ export default class LibraryEndpoint {
    * - `offset`: The index of the first object to return. Default: 0.
    * - `market`: An ISO 3166-1 alpha-2 country code or the string `from_token`. (Applies track relinking.)
    */
-  getSavedTracks(options) {
+  getSavedTracks(options = {}) {
     return this._getSavedItems("tracks", options);
   }
 
