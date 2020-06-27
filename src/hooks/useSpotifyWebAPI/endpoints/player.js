@@ -45,7 +45,7 @@ export default class PlayerEndpoint {
 
   /**
    * Method to transfer playback to the provided device.
-   * @param {String} deviceId
+   * @param {String} deviceId - Id of the device this command is targeting.
    * @param {Boolean} autoplay
    */
   transferPlayback(deviceId, autoplay = false) {
@@ -61,7 +61,7 @@ export default class PlayerEndpoint {
 
   /**
    * Method to start playback on the provided device.
-   * @param {String} deviceId
+   * @param {String} deviceId - Id of the device this command is targeting.
    * @param {String} contextUri
    */
   startPlayback(deviceId, contextUri = null) {
@@ -81,7 +81,7 @@ export default class PlayerEndpoint {
 
   /**
    * Method to pause playback on the provided device.
-   * @param {String} deviceId
+   * @param {String} deviceId - Id of the device this command is targeting.
    */
   pausePlayback(deviceId) {
     const config = {
@@ -95,15 +95,33 @@ export default class PlayerEndpoint {
 
   /**
    * Method to resume playback on the provided device.
-   * @param {String} deviceId
+   * @param {String} deviceId - Id of the device this command is targeting.
    */
   resumePlayback(deviceId) {
     return this.startPlayback(deviceId);
   }
 
   /**
+   * Method to seek position in currently playing track.
+   * @param {String} deviceId - Id of the device this command is targeting.
+   * @param {Number} position - The position in milliseconds to seek to.
+   * - `position` must be a positive number.
+   * - Passing in a `position` that is greater than the length of the track will cause the player to start playing the next song.
+   */
+  seekPosition(deviceId, position) {
+    const config = {
+      url: this.url + "/seek",
+      params: {
+        position_ms: position,
+        device_id: deviceId,
+      },
+    };
+    return this.api.put(config);
+  }
+
+  /**
    * Method to skip playback to the next track on the provided device.
-   * @param {String} deviceId
+   * @param {String} deviceId - Id of the device this command is targeting.
    */
   nextTrack(deviceId) {
     const config = {
@@ -117,7 +135,7 @@ export default class PlayerEndpoint {
 
   /**
    * Method to skip playback to the previous track on the provided device.
-   * @param {String} deviceId
+   * @param {String} deviceId - Id of the device this command is targeting.
    */
   previousTrack(deviceId) {
     const config = {
@@ -129,6 +147,11 @@ export default class PlayerEndpoint {
     return this.api.post(config);
   }
 
+  /**
+   * Method to set volume for playback.
+   * @param {String} deviceId - Id of the device this command is targeting.
+   * @param {Number} percent
+   */
   setVolume(deviceId, percent) {
     const config = {
       url: this.url + "/volume",
