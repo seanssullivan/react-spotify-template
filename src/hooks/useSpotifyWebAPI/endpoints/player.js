@@ -28,10 +28,10 @@ export default class PlayerEndpoint {
 
   /**
    * A method to get recently played tracks.
-   * @param {Object} options - Optional parameters (`limit`, `after`, and `before`)
-   * - limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.
-   * - after: A Unix timestamp in milliseconds. Returns all items after (but not including) this cursor position. If after is specified, before must not be specified.
-   * - before: A Unix timestamp in milliseconds. Returns all items before (but not including) this cursor position. If before is specified, after must not be specified.
+   * @param {Object} options - Optional parameters
+   * - `limit`: Maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.
+   * - `after`: Unix timestamp in milliseconds. Returns all items after (but not including) this cursor position. If `after` is specified, `before` must not be specified.
+   * - `before`: Unix timestamp in milliseconds. Returns all items before (but not including) this cursor position. If `before` is specified, `after` must not be specified.
    */
   recentlyPlayed(options) {
     const config = {
