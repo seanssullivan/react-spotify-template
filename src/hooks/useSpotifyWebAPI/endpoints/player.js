@@ -7,6 +7,16 @@ export default class PlayerEndpoint {
   }
 
   /**
+   * Method to get the currently playing track.
+   */
+  currentlyPlaying() {
+    const config = {
+      url: this.url + "/currently-playing",
+    };
+    return this.api.get(config);
+  }
+
+  /**
    * Method to transfer playback to the provided device.
    * @param {String} deviceId
    * @param {Boolean} autoplay
