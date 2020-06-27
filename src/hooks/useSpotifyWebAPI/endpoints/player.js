@@ -1,5 +1,6 @@
 // src/hooks/useSpotifyWebAPI/endpoints/player.js
 
+// TODO: Make deviceId optional for requests to /player endpoint.
 export default class PlayerEndpoint {
   constructor(api) {
     this._api = api;
@@ -25,6 +26,15 @@ export default class PlayerEndpoint {
    */
   get current() {
     return this.currentlyPlaying();
+  }
+
+  /**
+   * Return list of recently played tracks.
+   * - The default number of tracks returned is 20.
+   * - To return a different number of tracks, use the recentlyPlayed method.
+   */
+  get recent() {
+    return this.recentlyPlayed();
   }
 
   /**
