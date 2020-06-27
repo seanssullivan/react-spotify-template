@@ -4,18 +4,39 @@ export default class SearchEndpoint {
   constructor(api) {
     this._api = api;
     this._url = "/search";
+    this._validSearchTypes = [
+      "album",
+      "artist",
+      "playlist",
+      "track",
+      "show",
+      "episode",
+    ];
+  }
+
+  /**
+   * Confirms that each search type in the array is valid.
+   * @param {Array} searchTypes
+   */
+  confirmSearchTypes(searchTypes) {
+    searchTypes.forEach((searchType) => {
+      if (!this._validSearchTypes.includes(searchType)) {
+        throw Error(`${searchType} is not a valid search type`);
+      }
+    });
   }
 
   /**
    * Query the search endpoint.
    * @param {String} keywords
-   * @param {Array} itemTypes
+   * @param {Array} searchTypes
    * @param {Objects} options
    */
-  query(keywords, itemTypes, options = {}) {
+  query(keywords, searchTypes, options = {}) {
+    this.confirmSearchTypes(searchTypes);
     const config = {
       q: keywords,
-      type: itemTypes.join(","),
+      type: searchTypes.join(","),
       ...options,
     };
     return this._api.get(config);
