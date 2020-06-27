@@ -7,12 +7,39 @@ export default class PlayerEndpoint {
   }
 
   /**
+   * Method to get information about the current playback context.
+   */
+  currentPlayback() {
+    const config = {
+      url: this.url,
+    };
+    return this.api.get(config);
+  }
+
+  /**
    * Method to get the currently playing track.
    */
-  currentlyPlaying() {
+  currentlyTrack() {
     const config = {
       url: this.url + "/currently-playing",
     };
+    return this.api.get(config);
+  }
+
+  /**
+   * A method to get recently played tracks.
+   * @param {Object} options - Optional parameters (`limit`, `after`, and `before`)
+   * - limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.
+   * - after: A Unix timestamp in milliseconds. Returns all items after (but not including) this cursor position. If after is specified, before must not be specified.
+   * - before: A Unix timestamp in milliseconds. Returns all items before (but not including) this cursor position. If before is specified, after must not be specified.
+   */
+  recentlyPlayed(options) {
+    const config = {
+      url: this.url + "/recently-played",
+    };
+    if (options) {
+      config.params = options;
+    }
     return this.api.get(config);
   }
 
