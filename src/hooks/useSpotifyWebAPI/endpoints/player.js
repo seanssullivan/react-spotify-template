@@ -128,4 +128,15 @@ export default class PlayerEndpoint {
     };
     return this.api.post(config);
   }
+
+  setVolume(deviceId, percent) {
+    const config = {
+      url: this.url + "/volume",
+      params: {
+        volume_percent: percent,
+        device_id: deviceId,
+      },
+    };
+    return this.api.put(config);
+  }
 }
