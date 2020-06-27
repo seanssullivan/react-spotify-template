@@ -42,9 +42,12 @@ export default class SearchEndpoint {
   query(keywords, searchTypes, options = {}) {
     this.confirmSearchTypes(searchTypes);
     const config = {
-      q: keywords,
-      type: searchTypes.join(","),
-      ...options,
+      url: this._url,
+      params: {
+        q: keywords,
+        type: searchTypes.join(","),
+        ...options,
+      },
     };
     return this._api.get(config);
   }

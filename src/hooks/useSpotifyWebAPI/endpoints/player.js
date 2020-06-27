@@ -1,7 +1,7 @@
 // src/hooks/useSpotifyWebAPI/endpoints/player.js
 
 /**
- * Endpoint for interacting with the Spotify Player and Spotify Web Player SDK.
+ * Endpoints for interacting with the Spotify Player and Spotify Web Player SDK.
  * @param {Object} api - An instance of the SpotifyWebAPI parent class object.
  */
 export default class PlayerEndpoint {
