@@ -16,7 +16,8 @@ export default class SearchEndpoint {
 
   /**
    * Confirms that each search type in the array is valid.
-   * @param {Array} searchTypes
+   * @param {Array} searchTypes - Array of search types.
+   * - Valid search types are `album`, `artist`, `playlist`, `track`, `show` and `episode`
    */
   confirmSearchTypes(searchTypes) {
     searchTypes.forEach((searchType) => {
@@ -28,9 +29,10 @@ export default class SearchEndpoint {
 
   /**
    * Query the search endpoint.
-   * @param {String} keywords
-   * @param {Array} searchTypes
-   * @param {Objects} options
+   * @param {String} keywords - Keywords to include in the search query.
+   * @param {Array} searchTypes - Array of search types.
+   * - Valid search types are `album`, `artist`, `playlist`, `track`, `show` and `episode`
+   * @param {Objects} options - Optional query parameters.
    */
   query(keywords, searchTypes, options = {}) {
     this.confirmSearchTypes(searchTypes);
@@ -44,60 +46,60 @@ export default class SearchEndpoint {
 
   /**
    * Shortcut method to query the search endpoint for albums.
-   * @param {String} keywords
-   * @param {Object} options
+   * @param {String} keywords - Keywords to include in the search query.
+   * @param {Object} options - Optional query parameters.
    */
-  forAlbums(keywords, options = {}) {
+  albums(keywords, options = {}) {
     const itemTypes = ["album"];
     return this.query(keywords, itemTypes, options);
   }
 
   /**
    * Shortcut method to query the search endpoint for artists.
-   * @param {String} keywords
-   * @param {Object} options
+   * @param {String} keywords - Keywords to include in the search query.
+   * @param {Object} options - Optional query parameters.
    */
-  forArtists(keywords, options = {}) {
+  artists(keywords, options = {}) {
     const itemTypes = ["artist"];
     return this.query(keywords, itemTypes, options);
   }
 
   /**
    * Shortcut method to query the search endpoint for playlists.
-   * @param {String} keywords
-   * @param {Object} options
+   * @param {String} keywords - Keywords to include in the search query.
+   * @param {Object} options - Optional query parameters.
    */
-  forPlaylists(keywords, options = {}) {
+  playlists(keywords, options = {}) {
     const itemTypes = ["playlist"];
     return this.query(keywords, itemTypes, options);
   }
 
   /**
    * Shortcut method to query the search endpoint for tracks.
-   * @param {String} keywords
-   * @param {Object} options
+   * @param {String} keywords - Keywords to include in the search query.
+   * @param {Object} options - Optional query parameters.
    */
-  forTracks(keywords, options = {}) {
+  tracks(keywords, options = {}) {
     const itemTypes = ["track"];
     return this.query(keywords, itemTypes, options);
   }
 
   /**
    * Shortcut method to query the search endpoint for shows.
-   * @param {String} keywords
-   * @param {Object} options
+   * @param {String} keywords - Keywords to include in the search query.
+   * @param {Object} options - Optional query parameters.
    */
-  forShows(keywords, options = {}) {
+  shows(keywords, options = {}) {
     const itemTypes = ["show"];
     return this.query(keywords, itemTypes, options);
   }
 
   /**
    * Shortcut method to query the search endpoint for episodes.
-   * @param {String} keywords
-   * @param {Object} options
+   * @param {String} keywords - Keywords to include in the search query.
+   * @param {Object} options - Optional query parameters.
    */
-  forEpisodes(keywords, options = {}) {
+  episodes(keywords, options = {}) {
     const itemTypes = ["episode"];
     return this.query(keywords, itemTypes, options);
   }
