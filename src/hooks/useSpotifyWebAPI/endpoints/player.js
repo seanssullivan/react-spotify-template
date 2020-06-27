@@ -2,8 +2,39 @@
 
 export default class PlayerEndpoint {
   constructor(api) {
-    this.api = api;
-    this.url = "/me/player";
+    this._api = api;
+    this._url = "/me/player";
+  }
+
+  /**
+   * Return list of available devices.
+   */
+  get devices() {
+    return this.getDevices();
+  }
+
+  /**
+   * Return current playback context.
+   */
+  get context() {
+    return this.currentPlayback();
+  }
+
+  /**
+   * Return currently playing track.
+   */
+  get current() {
+    return this.currentTrack();
+  }
+
+  /**
+   * Get list of available devices.
+   */
+  getDevices() {
+    const config = {
+      url: this._url + "/devices",
+    };
+    return this._api.get(config);
   }
 
   /**
@@ -11,19 +42,19 @@ export default class PlayerEndpoint {
    */
   currentPlayback() {
     const config = {
-      url: this.url,
+      url: this._url,
     };
-    return this.api.get(config);
+    return this._api.get(config);
   }
 
   /**
    * Method to get the currently playing track.
    */
-  currentlyTrack() {
+  currentTrack() {
     const config = {
-      url: this.url + "/currently-playing",
+      url: this._url + "/currently-playing",
     };
-    return this.api.get(config);
+    return this._api.get(config);
   }
 
   /**
@@ -35,38 +66,38 @@ export default class PlayerEndpoint {
    */
   recentlyPlayed(options) {
     const config = {
-      url: this.url + "/recently-played",
+      url: this._url + "/recently-played",
     };
     if (options) {
       config.params = options;
     }
-    return this.api.get(config);
+    return this._api.get(config);
   }
 
   /**
    * Method to transfer playback to the provided device.
-   * @param {String} deviceId - Id of the device this command is targeting.
+   * @param {String} deviceId - Id of the device this request is targeting.
    * @param {Boolean} autoplay
    */
   transferPlayback(deviceId, autoplay = false) {
     const config = {
-      url: this.url,
+      url: this._url,
       data: {
         device_ids: [deviceId],
         play: autoplay,
       },
     };
-    return this.api.put(config);
+    return this._api.put(config);
   }
 
   /**
    * Method to start playback on the provided device.
-   * @param {String} deviceId - Id of the device this command is targeting.
+   * @param {String} deviceId - Id of the device this request is targeting.
    * @param {String} contextUri
    */
   startPlayback(deviceId, contextUri = null) {
     const config = {
-      url: this.url + "/play",
+      url: this._url + "/play",
       params: {
         device_id: deviceId,
       },
@@ -76,26 +107,26 @@ export default class PlayerEndpoint {
         context_uri: contextUri,
       };
     }
-    return this.api.put(config);
+    return this._api.put(config);
   }
 
   /**
    * Method to pause playback on the provided device.
-   * @param {String} deviceId - Id of the device this command is targeting.
+   * @param {String} deviceId - Id of the device this request is targeting.
    */
   pausePlayback(deviceId) {
     const config = {
-      url: this.url + "/pause",
+      url: this._url + "/pause",
       params: {
         device_id: deviceId,
       },
     };
-    return this.api.put(config);
+    return this._api.put(config);
   }
 
   /**
    * Method to resume playback on the provided device.
-   * @param {String} deviceId - Id of the device this command is targeting.
+   * @param {String} deviceId - Id of the device this request is targeting.
    */
   resumePlayback(deviceId) {
     return this.startPlayback(deviceId);
@@ -103,63 +134,63 @@ export default class PlayerEndpoint {
 
   /**
    * Method to seek position in currently playing track.
-   * @param {String} deviceId - Id of the device this command is targeting.
+   * @param {String} deviceId - Id of the device this request is targeting.
    * @param {Number} position - The position in milliseconds to seek to.
    * - `position` must be a positive number.
    * - Passing in a `position` that is greater than the length of the track will cause the player to start playing the next song.
    */
   seekPosition(deviceId, position) {
     const config = {
-      url: this.url + "/seek",
+      url: this._url + "/seek",
       params: {
         position_ms: position,
         device_id: deviceId,
       },
     };
-    return this.api.put(config);
+    return this._api.put(config);
   }
 
   /**
    * Method to skip playback to the next track on the provided device.
-   * @param {String} deviceId - Id of the device this command is targeting.
+   * @param {String} deviceId - Id of the device this request is targeting.
    */
   nextTrack(deviceId) {
     const config = {
-      url: this.url + "/next",
+      url: this._url + "/next",
       params: {
         device_id: deviceId,
       },
     };
-    return this.api.post(config);
+    return this._api.post(config);
   }
 
   /**
    * Method to skip playback to the previous track on the provided device.
-   * @param {String} deviceId - Id of the device this command is targeting.
+   * @param {String} deviceId - Id of the device this request is targeting.
    */
   previousTrack(deviceId) {
     const config = {
-      url: this.url + "/previous",
+      url: this._url + "/previous",
       params: {
         device_id: deviceId,
       },
     };
-    return this.api.post(config);
+    return this._api.post(config);
   }
 
   /**
    * Method to set volume for playback.
-   * @param {String} deviceId - Id of the device this command is targeting.
+   * @param {String} deviceId - Id of the device this request is targeting.
    * @param {Number} percent
    */
   setVolume(deviceId, percent) {
     const config = {
-      url: this.url + "/volume",
+      url: this._url + "/volume",
       params: {
         volume_percent: percent,
         device_id: deviceId,
       },
     };
-    return this.api.put(config);
+    return this._api.put(config);
   }
 }
