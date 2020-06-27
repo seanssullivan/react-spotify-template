@@ -1,4 +1,4 @@
-// src/hooks/useSpotifyWebAPI/endpoints/player.js
+// src/hooks/useSpotifyWebAPI/endpoints/library.js
 
 /**
  * Endpoints for retrieving information about, and managing, tracks that the current user has saved in their library.
@@ -35,7 +35,7 @@ export default class LibraryEndpoint {
 
   /**
    * Method to handle all GET requests to retrieve items from the library endpoint.
-   * @param {String} itemType
+   * @param {String} itemType - Saved item type (either albums, shows or tracks).
    * @param {Object} options
    */
   _getSavedItems(itemType, options = {}) {
@@ -85,7 +85,7 @@ export default class LibraryEndpoint {
 
   /**
    * Method to handle all GET requests to check if items are already saved in the current user's library.
-   * @param {String} itemType
+   * @param {String} itemType - Saved item type (either albums, shows or tracks).
    * @param {Array} itemIds
    */
   _containsItems(itemType, itemIds) {
@@ -100,6 +100,7 @@ export default class LibraryEndpoint {
 
   /**
    * Check if one or more albums are already saved in the current user’s library.
+   * https://developer.spotify.com/documentation/web-api/reference/library/check-users-saved-albums/
    * @param {*} albumIds - A comma-separated list of the IDs for the albums. Maximum: 50 IDs.
    */
   containsAlbums(albumIds) {
@@ -108,6 +109,7 @@ export default class LibraryEndpoint {
 
   /**
    * Check if one or more shows are already saved in the current user’s library.
+   * https://developer.spotify.com/documentation/web-api/reference/library/check-users-saved-shows/
    * @param {*} showIds - A comma-separated list of the IDs for the shows. Maximum: 50 IDs.
    */
   containsShows(showIds) {
@@ -116,9 +118,52 @@ export default class LibraryEndpoint {
 
   /**
    * Check if one or more tracks are already saved in the current user’s library.
+   * https://developer.spotify.com/documentation/web-api/reference/library/check-users-saved-tracks/
    * @param {*} trackIds - A comma-separated list of the IDs for the tracks. Maximum: 50 IDs.
    */
   containsTracks(trackIds) {
     return this._containsItems("tracks", trackIds);
+  }
+
+  /**
+   * Method to handle all PUT requests to save items to the current user's library.
+   * @param {String} itemType - Saved item type (either albums, shows or tracks).
+   * @param {Array} itemIds
+   */
+  _saveItems(itemType, itemIds) {
+    const config = {
+      url: [this._url, itemType].join("/"),
+      params: {
+        ids: itemIds.join(","),
+      },
+    };
+    return this._api.put(config);
+  }
+
+  /**
+   * Save one or more albums to the current user’s library.
+   * https://developer.spotify.com/documentation/web-api/reference/library/save-albums-user/
+   * @param {*} albumIds - A comma-separated list of the IDs for the albums. Maximum: 50 IDs.
+   */
+  saveAlbums(albumIds) {
+    return this._saveItems("albums", albumIds);
+  }
+
+  /**
+   * Save one or more shows to current user’s library.
+   * https://developer.spotify.com/documentation/web-api/reference/library/save-shows-user/
+   * @param {*} showIds - A comma-separated list of the IDs for the shows. Maximum: 50 IDs.
+   */
+  saveShows(showIds) {
+    return this._saveItems("shows", showIds);
+  }
+
+  /**
+   * Save one or more tracks to the current user’s library.
+   * https://developer.spotify.com/documentation/web-api/reference/library/save-tracks-user/
+   * @param {*} trackIds - A comma-separated list of the IDs for the tracks. Maximum: 50 IDs.
+   */
+  saveTracks(trackIds) {
+    return this._csaveItems("tracks", trackIds);
   }
 }
