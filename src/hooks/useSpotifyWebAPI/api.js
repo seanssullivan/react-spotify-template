@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import PlayerEndpoint from "./endpoints/player";
+import SearchEndpoint from "./endpoints/search";
 
 export default class SpotifyWebAPI {
   constructor(accessToken) {
@@ -13,6 +14,7 @@ export default class SpotifyWebAPI {
 
     // Define API endpoints
     this.player = new PlayerEndpoint(this);
+    this.search = new SearchEndpoint(this);
   }
 
   /**

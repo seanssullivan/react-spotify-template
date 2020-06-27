@@ -1,7 +1,11 @@
 // src/hooks/useSpotifyWebAPI/endpoints/player.js
 
-// TODO: Make deviceId optional for requests to /player endpoint.
+/**
+ * Endpoint for interacting with the Spotify Player and Spotify Web Player SDK.
+ * @param {Object} api - An instance of the SpotifyWebAPI parent class object.
+ */
 export default class PlayerEndpoint {
+  // TODO: Make deviceId optional for requests to /player endpoint.
   constructor(api) {
     this._api = api;
     this._url = "/me/player";

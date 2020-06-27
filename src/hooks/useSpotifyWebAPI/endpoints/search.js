@@ -1,5 +1,10 @@
 // src/hooks/useSpotifyWebAPI/endpoints/search.js
 
+/**
+ * The search endpoint allows access to catalog information about
+ * albums, artists, playlists, tracks, shows or episodes that match a keyword string.
+ * @param {Object} api - An instance of the SpotifyWebAPI parent class object.
+ */
 export default class SearchEndpoint {
   constructor(api) {
     this._api = api;
