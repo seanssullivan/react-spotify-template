@@ -24,7 +24,7 @@ export default class PlayerEndpoint {
    * Return currently playing track.
    */
   get current() {
-    return this.currentTrack();
+    return this.currentlyPlaying();
   }
 
   /**
@@ -50,7 +50,7 @@ export default class PlayerEndpoint {
   /**
    * Method to get the currently playing track.
    */
-  currentTrack() {
+  currentlyPlaying() {
     const config = {
       url: this._url + "/currently-playing",
     };
@@ -72,6 +72,22 @@ export default class PlayerEndpoint {
       config.params = options;
     }
     return this._api.get(config);
+  }
+
+  /**
+   * Add an item to the playback queue.
+   * @param {*} deviceId
+   * @param {*} contentUri
+   */
+  addToQueue(deviceId, contentUri) {
+    const config = {
+      url: this._url + "/queue",
+      params: {
+        device_id: deviceId,
+        uri: contentUri,
+      },
+    };
+    return this._api.post(config);
   }
 
   /**
@@ -188,6 +204,52 @@ export default class PlayerEndpoint {
       url: this._url + "/volume",
       params: {
         volume_percent: percent,
+        device_id: deviceId,
+      },
+    };
+    return this._api.put(config);
+  }
+
+  /**
+   * Set repeat mode on playback.
+   * @param {String} deviceId - Id of the device this request is targeting.
+   * @param {String} targetState - Repeat state (either `track`, `context` or `off`)
+   * - `track` will repeat the current track.
+   * - `context` will repeat the current context.
+   * - `off` will turn repeat off.
+   */
+  setRepeat(deviceId, repeatState) {
+    // repeatState must be either 'track', 'context' or 'off'
+    if (!["track", "context", "off"].includes(repeatState)) {
+      throw Error("invalid repeat state");
+    }
+
+    const config = {
+      url: this._url + "/repeat",
+      params: {
+        state: repeatState,
+        device_id: deviceId,
+      },
+    };
+    return this._api.put(config);
+  }
+
+  /**
+   * Toggle shuffle for playback.
+   * @param {String} deviceId - Id of the device this request is targeting.
+   * @param {Boolean} shuffleState - Shuffle state:
+   * - `true` : Shuffle user’s playback.
+   * - `false` : Do not shuffle user’s playback.
+   */
+  setShuffle(deviceId, shuffleState) {
+    if (typeof shuffleState !== "boolean") {
+      throw Error("invalid shuffle state");
+    }
+
+    const config = {
+      url: this._url + "/shuffle",
+      params: {
+        state: shuffleState,
         device_id: deviceId,
       },
     };
